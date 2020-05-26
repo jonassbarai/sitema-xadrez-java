@@ -1,5 +1,6 @@
 package xadrez;
 
+import tabuleiro.Peca;
 import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
 import xadrez.pecas.Rei;
@@ -23,14 +24,43 @@ public class PartidaXadrez {
 		return mat;
 	}
 	
+	public PecaXadrez movimentoxadrez(PosicaoXadrez posicaoOrigem, PosicaoXadrez posicaoDestino) {
+		Posicao origem = posicaoOrigem.paraPosicao();
+		Posicao destino = posicaoDestino.paraPosicao();
+		validarPosicaoOrigem(origem);
+		Peca pecaCapturada = fazerMovimento(origem,destino);
+		return (PecaXadrez)pecaCapturada;
+	}
+	
+	 private void validarPosicaoOrigem(Posicao posicao) {
+		 if(!tabuleiro.haPeca(posicao))
+			 throw new XadrezException("não há peca nessa posição ");
+	 }
+	 
+	 private Peca fazerMovimento(Posicao origem, Posicao destino) {
+		 Peca p = tabuleiro.removerPeca(origem);
+		 Peca pecaCapturada = tabuleiro.removerPeca(destino);
+		 tabuleiro.ColocarPeca(p, destino);
+		 return pecaCapturada;
+	 }
+	 
 	private void colocarNovaPeca(char coluna, int linha, PecaXadrez peca) {
 		tabuleiro.ColocarPeca(peca, new PosicaoXadrez(coluna,linha).paraPosicao());
 	}
 	
 	private void setupInicial() {
-		colocarNovaPeca('b',6, new Torre(tabuleiro,Cor.WHITE));
-		colocarNovaPeca('e',8, new Rei(tabuleiro,Cor.BLACK));
-		colocarNovaPeca('e',1, new Rei(tabuleiro,Cor.WHITE));
+		colocarNovaPeca('c', 1, new Torre(tabuleiro, Cor.WHITE));
+        colocarNovaPeca('c', 2, new Torre(tabuleiro, Cor.WHITE));
+        colocarNovaPeca('d', 2, new Torre(tabuleiro, Cor.WHITE));
+        colocarNovaPeca('e', 2, new Torre(tabuleiro, Cor.WHITE));
+        colocarNovaPeca('e', 1, new Torre(tabuleiro, Cor.WHITE));
+        colocarNovaPeca('d', 1, new Rei(tabuleiro, Cor.WHITE));
+        colocarNovaPeca('c', 7, new Torre(tabuleiro, Cor.BLACK));
+        colocarNovaPeca('c', 8, new Torre(tabuleiro, Cor.BLACK));
+        colocarNovaPeca('d', 7, new Torre(tabuleiro, Cor.BLACK));
+        colocarNovaPeca('e', 7, new Torre(tabuleiro, Cor.BLACK));
+        colocarNovaPeca('e', 8, new Torre(tabuleiro, Cor.BLACK));
+        colocarNovaPeca('d', 8, new Rei(tabuleiro, Cor.BLACK));
 	}
 	
 	private int turno;
