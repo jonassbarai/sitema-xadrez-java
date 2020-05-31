@@ -1,5 +1,8 @@
 package xadrez;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tabuleiro.Peca;
 import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
@@ -8,11 +11,32 @@ import xadrez.pecas.Torre;
 
 public class PartidaXadrez {
 	
+	
+	private int turno;
+	private Cor jogador;
+	private boolean check;
+	private boolean checkMate;
 	private Tabuleiro tabuleiro;
+	
+	private List<Peca> pecasNoTabuleiro = new ArrayList<>();
+	private List<Peca> pecasCapturadas = new ArrayList<>();
+
+	
+	
 	
 	public PartidaXadrez() {
 		tabuleiro= new Tabuleiro(8,8);
+		turno =1;
+		jogador = Cor.WHITE;
 		setupInicial();
+	}
+	
+	public int getTurno() {
+		return turno;
+	}
+	
+	public Cor getJogador() {
+		return jogador;
 	}
 	
 	public PecaXadrez[][] getPecas(){
@@ -43,6 +67,9 @@ public class PartidaXadrez {
 		 if(!tabuleiro.haPeca(posicao))
 			 throw new XadrezException("não há peca nessa posição ");
 		 
+		 if(jogador != ((PecaXadrez)tabuleiro.peca(posicao)).getCor())
+			 throw new XadrezException("nao e possivel mover a peca do adversario");
+		 
 		 if(!tabuleiro.peca(posicao).haMovimetosPossiveis())
 	 		 throw new XadrezException("nao ha movimentos possiveis para a peca escolhida");
 	 }
@@ -55,12 +82,22 @@ public class PartidaXadrez {
 	 private Peca fazerMovimento(Posicao origem, Posicao destino) {
 		 Peca p = tabuleiro.removerPeca(origem);
 		 Peca pecaCapturada = tabuleiro.removerPeca(destino);
+		 if(pecaCapturada != null)
+			 pecasNoTabuleiro.remove(pecaCapturada);
+			 pecasCapturadas.add(pecaCapturada);
 		 tabuleiro.ColocarPeca(p, destino);
+		 proximoTurno();
 		 return pecaCapturada;
 	 }
 	 
 	private void colocarNovaPeca(char coluna, int linha, PecaXadrez peca) {
 		tabuleiro.ColocarPeca(peca, new PosicaoXadrez(coluna,linha).paraPosicao());
+		pecasNoTabuleiro.add(peca);
+	}
+	
+	private void proximoTurno() {
+		turno++;
+		jogador= (jogador == Cor.WHITE) ? Cor.BLACK : Cor.WHITE;
 	}
 	
 	private void setupInicial() {
@@ -78,9 +115,6 @@ public class PartidaXadrez {
         colocarNovaPeca('d', 8, new Rei(tabuleiro, Cor.BLACK));
 	}
 	
-	private int turno;
-	private Cor Jogador;
-	private boolean check;
-	private boolean checkMate;
+	
 
 }
