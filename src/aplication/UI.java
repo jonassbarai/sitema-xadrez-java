@@ -48,7 +48,7 @@ public class UI {
 		return new PosicaoXadrez(coluna,linha);
 		}
 		catch(RuntimeException e){
-			throw new InputMismatchException("erro ao ler a posição do xadrez, valores validos são de a1 a h8 ");
+			throw new InputMismatchException("erro ao ler a posiï¿½ï¿½o do xadrez, valores validos sï¿½o de a1 a h8 ");
 		}
 	}
 	
@@ -58,6 +58,8 @@ public class UI {
 		System.out.println();
 		System.out.println("Turno: "+ partidaXadrez.getTurno());
 		System.out.println("esperando jogador: "+ partidaXadrez.getJogador());
+		if(partidaXadrez.getCheck())
+			System.out.println("CHECK!");
 	}
 	
 	public static void printTabuleiro(PecaXadrez[][] pecas) {
@@ -109,8 +111,8 @@ public class UI {
 		System.out.println("pecas capturadas: ");
 		System.out.print("brancas: ");
 		System.out.print(ANSI_WHITE);
-		System.out.print(Arrays.toString(brancas.toArray()));
-		System.out.println(ANSI_RESET);
+		System.out.println(Arrays.toString(brancas.toArray()));
+		System.out.print(ANSI_RESET);
 		System.out.print(ANSI_GREEN);
 		System.out.print("verdes: ");
 		System.out.print(Arrays.toString(pretas.toArray()));

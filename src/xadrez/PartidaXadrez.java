@@ -2,6 +2,7 @@ package xadrez;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import tabuleiro.Peca;
 import tabuleiro.Posicao;
@@ -35,6 +36,10 @@ public class PartidaXadrez {
 		return turno;
 	}
 	
+	public boolean getCheck() {
+		return check;
+	}
+	
 	public Cor getJogador() {
 		return jogador;
 	}
@@ -60,12 +65,19 @@ public class PartidaXadrez {
 		validarPosicaoOrigem(origem);
 		validarPosicaoDestino(origem,destino);
 		Peca pecaCapturada = fazerMovimento(origem,destino);
+		
+		if(testeCheck(jogador)) {
+			desfazerMovimento(origem, destino, pecaCapturada);
+			throw new XadrezException("voce nao pode se colocar em check");
+		}
+		check = (testeCheck(oponente(jogador))) ? true : false;
+		proximoTurno();
 		return (PecaXadrez)pecaCapturada;
 	}
 	
 	 private void validarPosicaoOrigem(Posicao posicao) {
 		 if(!tabuleiro.haPeca(posicao))
-			 throw new XadrezException("não há peca nessa posição ");
+			 throw new XadrezException("nao ha peca nessa posiï¿½ï¿½o ");
 		 
 		 if(jogador != ((PecaXadrez)tabuleiro.peca(posicao)).getCor())
 			 throw new XadrezException("nao e possivel mover a peca do adversario");
@@ -82,13 +94,50 @@ public class PartidaXadrez {
 	 private Peca fazerMovimento(Posicao origem, Posicao destino) {
 		 Peca p = tabuleiro.removerPeca(origem);
 		 Peca pecaCapturada = tabuleiro.removerPeca(destino);
-		 if(pecaCapturada != null)
+		 
+		 if(pecaCapturada != null) {
 			 pecasNoTabuleiro.remove(pecaCapturada);
 			 pecasCapturadas.add(pecaCapturada);
-		 tabuleiro.ColocarPeca(p, destino);
-		 proximoTurno();
+		 }		 
+		 tabuleiro.ColocarPeca(p, destino);		 
 		 return pecaCapturada;
 	 }
+	 
+	 
+	private void desfazerMovimento(Posicao origem,Posicao destino, Peca pecaCapturada) {
+		Peca p = tabuleiro.removerPeca(destino);
+		tabuleiro.ColocarPeca(p, origem);
+		if(pecaCapturada != null) {
+			tabuleiro.ColocarPeca(pecaCapturada, destino);
+			 pecasNoTabuleiro.add(pecaCapturada);
+			 pecasCapturadas.remove(pecaCapturada);
+		 }
+		
+	}
+	
+	private Cor oponente(Cor cor) {
+		return(cor ==Cor.WHITE)? Cor.BLACK : Cor.WHITE;
+	}
+	
+	private PecaXadrez rei(Cor cor) {
+		List<Peca> lista = pecasNoTabuleiro.stream().filter(x-> ((PecaXadrez)x).getCor()==cor).collect(Collectors.toList());
+		for(Peca p :lista) {
+			if(p instanceof Rei)
+				return (PecaXadrez) p;
+		}
+		throw new IllegalStateException("nao existe o rei da cor" + cor);
+	}
+	
+	private boolean testeCheck(Cor cor) {
+		Posicao reiPosicao = rei(cor).getPosicaoXadrez().paraPosicao();
+		List<Peca> pecaOponente = pecasNoTabuleiro.stream().filter(x-> ((PecaXadrez)x).getCor()==oponente(cor)).collect(Collectors.toList());
+		for(Peca p: pecaOponente) {
+			boolean[][] mat = p.movimentosPossiveis();
+			if(mat[reiPosicao.getLinha()][reiPosicao.getColuna()])
+				return true;
+		}
+		return false;
+	}
 	 
 	private void colocarNovaPeca(char coluna, int linha, PecaXadrez peca) {
 		tabuleiro.ColocarPeca(peca, new PosicaoXadrez(coluna,linha).paraPosicao());
@@ -113,8 +162,7 @@ public class PartidaXadrez {
         colocarNovaPeca('e', 7, new Torre(tabuleiro, Cor.BLACK));
         colocarNovaPeca('e', 8, new Torre(tabuleiro, Cor.BLACK));
         colocarNovaPeca('d', 8, new Rei(tabuleiro, Cor.BLACK));
-	}
-	
+	}	
 	
 
 }

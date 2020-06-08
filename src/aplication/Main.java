@@ -37,6 +37,7 @@ public class Main {
 				PosicaoXadrez destino = UI.lerPosicaoXadrez(sc);
 				
 				PecaXadrez pecaCapturada = partida.movimentoxadrez(origem, destino);
+				if(pecaCapturada!=null)
 					capturadas.add(pecaCapturada);
 			}
 			catch(XadrezException e) {
