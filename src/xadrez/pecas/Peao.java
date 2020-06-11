@@ -1,7 +1,5 @@
 package xadrez.pecas;
 
-import java.nio.channels.GatheringByteChannel;
-
 import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
 import xadrez.Cor;
