@@ -39,6 +39,12 @@ public class Main {
 				PecaXadrez pecaCapturada = partida.movimentoxadrez(origem, destino);
 				if(pecaCapturada!=null)
 					capturadas.add(pecaCapturada);
+				
+				if(partida.getPromocao() != null) {
+					System.out.println("digite a peca para a promocao(B/C/Q/T)");
+					String tipoPeca =sc.nextLine();
+					partida.recolocarPecaPromovida(tipoPeca);
+				}
 			}
 			catch(XadrezException e) {
 				System.out.println(e.getMessage());
