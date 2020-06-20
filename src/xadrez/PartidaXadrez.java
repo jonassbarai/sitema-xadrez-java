@@ -124,8 +124,8 @@ public class PartidaXadrez {
 		if(promocao == null) {
 			throw new XadrezException("nao ha peca ha ser promovida");
 		}
-		if(!tipoPeca.equals("B") && !tipoPeca.equals("C") && !tipoPeca.equals("Q") && !tipoPeca.equals("t")){
-			throw new InvalidParameterException("tipo de promocao invalida");
+		if(!tipoPeca.equals("B") && !tipoPeca.equals("C") && !tipoPeca.equals("Q") && !tipoPeca.equals("T")){
+			return promocao;
 		}
 		
 		Posicao pos = promocao.getPosicaoXadrez().paraPosicao();
@@ -346,7 +346,7 @@ public class PartidaXadrez {
 	        colocarNovaPeca('e', 7, new Peao(tabuleiro, Cor.BLACK,this));
 		 	colocarNovaPeca('f',8, new Bispo(tabuleiro, Cor.BLACK));
 	        colocarNovaPeca('f', 7, new Peao(tabuleiro, Cor.BLACK,this));
-	        colocarNovaPeca('g', 7, new Peao(tabuleiro, Cor.BLACK,this));
+	        colocarNovaPeca('g', 7, new Peao(tabuleiro, Cor.WHITE,this));
 		 	colocarNovaPeca('g',8, new Cavalo(tabuleiro, Cor.BLACK));
 	        colocarNovaPeca('h', 7, new Peao(tabuleiro, Cor.BLACK,this));
 	}	

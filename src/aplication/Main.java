@@ -42,7 +42,11 @@ public class Main {
 				
 				if(partida.getPromocao() != null) {
 					System.out.println("digite a peca para a promocao(B/C/Q/T)");
-					String tipoPeca =sc.nextLine();
+					String tipoPeca =sc.nextLine().toUpperCase();
+					while(!tipoPeca.equals("B") && !tipoPeca.equals("C") && !tipoPeca.equals("Q") && !tipoPeca.equals("T")){
+						System.out.println("valor invalido! digite a peca para a promocao(B/C/Q/T)");
+						 tipoPeca =sc.nextLine().toUpperCase();
+					}
 					partida.recolocarPecaPromovida(tipoPeca);
 				}
 			}
